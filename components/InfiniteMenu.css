@@ -1,0 +1,177 @@
+#infinite-grid-menu-canvas {
+  cursor: grab;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  outline: none;
+  background: transparent;
+}
+
+#infinite-grid-menu-canvas:active {
+  cursor: grabbing;
+}
+
+.infinite-menu-container {
+  background-color: transparent; /* Seamlessly match parent section background */
+}
+
+.action-button {
+  position: absolute;
+  left: 50%;
+  z-index: 10;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  background-color: #0a1d0f;
+  border: 1px solid rgba(165, 214, 167, 0.4); /* Sage Green border */
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(10, 29, 15, 0.15);
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.action-button:hover {
+  background-color: #A5D6A7; /* Light sage hover bg */
+  border-color: #0a1d0f;
+  transform: translateX(-50%) scale(1.1);
+  box-shadow: 0 15px 35px rgba(10, 29, 15, 0.2);
+}
+
+.action-button:hover .action-button-icon {
+  color: #0a1d0f !important;
+  transform: translate(2px, -2px);
+}
+
+.action-button-icon {
+  user-select: none;
+  position: relative;
+  color: #E8F5E9;
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.face-title {
+  user-select: none;
+  position: absolute;
+  font-family: var(--font-serif), Cormorant Garamond, Georgia, serif;
+  font-weight: 300;
+  font-size: 2rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0a1d0f; /* Breathtaking signature dark forest green */
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  max-width: 300px;
+}
+
+.face-title.active {
+  opacity: 1;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.face-title.inactive {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-50%) translateX(-20px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.face-description {
+  user-select: none;
+  position: absolute;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  font-weight: 300;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  color: rgba(10, 29, 15, 0.75); /* Sophisticated dark green slate */
+  max-width: 260px;
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.face-description.active {
+  opacity: 1;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.face-description.inactive {
+  pointer-events: none;
+  transform: translateY(-50%) translateX(20px);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.action-button.active {
+  bottom: 4rem;
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.action-button.inactive {
+  bottom: 2rem;
+  transform: translateX(-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+/* Highly responsive and premium typography adaptations */
+@media (max-width: 1200px) {
+  .face-title {
+    font-size: 1.6rem;
+    left: 6%;
+    max-width: 220px;
+  }
+  .face-description {
+    font-size: 0.85rem;
+    right: 6%;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .face-title {
+    font-size: 1.25rem;
+    left: 4%;
+    max-width: 140px;
+    top: 25%;
+    transform: none;
+  }
+  .face-title.active {
+    transform: none;
+  }
+  .face-title.inactive {
+    transform: translateX(-10px);
+  }
+  
+  .face-description {
+    font-size: 0.8rem;
+    right: 4%;
+    max-width: 140px;
+    top: 25%;
+    transform: none;
+  }
+  .face-description.active {
+    transform: none;
+  }
+  .face-description.inactive {
+    transform: translateX(10px);
+  }
+  
+  .action-button.active {
+    bottom: 2.5rem;
+  }
+}
