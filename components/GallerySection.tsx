@@ -57,7 +57,7 @@ export default function GallerySection() {
           Gallery
         </h2>
         <div className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#1B5E20]/30 to-transparent mb-5" />
-        <p className="text-[#0a1d0f]/75 font-sans font-light max-w-xl text-xs md:text-base leading-relaxed">
+        <p className="text-[#0a1d0f]/75 font-sans font-light max-w-2xl text-sm md:text-lg lg:text-xl leading-relaxed">
           Experience standard-defining architectures and bespoke designs.
         </p>
       </div>

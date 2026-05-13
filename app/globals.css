@@ -76,12 +76,12 @@
 }
 
 @theme inline {
-  --font-sans: 'PP Radio Grotesk', var(--font-space-grotesk), sans-serif;
-  --font-serif: 'PP Pangaia', var(--font-cormorant), serif;
+  --font-sans: var(--font-space-grotesk), sans-serif;
+  --font-serif: var(--font-cormorant), serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
-  --font-proxima: 'PP Radio Grotesk', var(--font-space-grotesk), sans-serif;
-  --font-lato: 'PP Radio Grotesk', var(--font-space-grotesk), sans-serif;
-  --font-avenir: 'PP Radio Grotesk', var(--font-space-grotesk), sans-serif;
+  --font-proxima: var(--font-space-grotesk), sans-serif;
+  --font-lato: var(--font-space-grotesk), sans-serif;
+  --font-avenir: var(--font-space-grotesk), sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

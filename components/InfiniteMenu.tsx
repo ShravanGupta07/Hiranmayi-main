@@ -46,7 +46,7 @@ void main() {
     gl_Position = uProjectionMatrix * uViewMatrix * worldPosition;
 
     // Aggressively isolate the central image so adjacent items remain 100% invisible until perfectly centered
-    vAlpha = smoothstep(0.95, 0.99, normalize(worldPosition.xyz).z);
+    vAlpha = smoothstep(0.95, 0.99, normalize(centerPos).z);
     vUvs = aModelUvs;
     vInstanceId = gl_InstanceID;
 }
@@ -770,7 +770,7 @@ class InfiniteGridMenu {
     this.control.update(deltaTime, this.TARGET_FRAME_DURATION);
 
     let positions = this.instancePositions.map(p => vec3.transformQuat(vec3.create(), p, this.control.orientation));
-    const scale = 0.25;
+    const scale = 0.33;
     const SCALE_INTENSITY = 0.6;
     positions.forEach((p, ndx) => {
       const s = (Math.abs(p[2]) / this.SPHERE_RADIUS) * SCALE_INTENSITY + (1 - SCALE_INTENSITY);
@@ -922,8 +922,12 @@ const defaultItems = [
 
 export default function InfiniteMenu({ items = [], scale = 1.0 }) {
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
   const [activeItem, setActiveItem] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [isGrabbed, setIsGrabbed] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -962,6 +966,14 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
     };
   }, [items, scale]);
 
+  const handleMouseMove = (e) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setCoords({ x, y });
+  };
+
   const handleButtonClick = () => {
     if (!activeItem?.link) return;
     if (activeItem.link.startsWith('http')) {
@@ -972,8 +984,31 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }} className="infinite-menu-container">
+    <div 
+      ref={containerRef}
+      style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }} 
+      className="infinite-menu-container"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setIsGrabbed(false);
+      }}
+      onMouseDown={() => setIsGrabbed(true)}
+      onMouseUp={() => setIsGrabbed(false)}
+    >
       <canvas id="infinite-grid-menu-canvas" ref={canvasRef} />
+
+      {/* Modern custom mouse follower */}
+      <div 
+        className={`drag-follower ${isHovered ? 'visible' : ''} ${isGrabbed ? 'grabbed' : ''}`}
+        style={{
+          left: `${coords.x}px`,
+          top: `${coords.y}px`,
+        }}
+      >
+        DRAG
+      </div>
 
       {activeItem && (
         <>

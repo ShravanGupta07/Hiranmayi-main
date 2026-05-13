@@ -255,7 +255,7 @@ export function Caribbean() {
                   </div>
                 )}
                 {/* Left Column: Floating Image 1 (Symmetrical Center - Mid of Line with Horizontal Slices) */}
-                <div className="retreat-img-left hidden lg:block absolute left-8 lg:left-12 top-1/2 -translate-y-1/2 w-[120px] lg:w-[140px] h-[210px] lg:h-[240px] rounded-none overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.6)] border border-white/5 z-20 bg-black/10">
+                <div className="retreat-img-left hidden lg:block absolute left-8 lg:left-12 top-1/2 -translate-y-1/2 w-[150px] lg:w-[180px] h-[260px] lg:h-[310px] rounded-none overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.6)] border border-white/5 z-20 bg-black/10">
                   <div className="relative w-full h-full bg-transparent">
                     {Array.from({ length: RETREAT_SLICE_COUNT }).map((_, i) => (
                       <div
@@ -327,7 +327,7 @@ export function Caribbean() {
                 <div className="hidden lg:block">
                   
                   {/* Top Right Corner Square Image */}
-                  <div className="retreat-img-top-right absolute right-8 lg:right-12 top-8 lg:top-10 w-[130px] lg:w-[150px] h-[130px] lg:h-[150px] rounded-none overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.6)] border border-white/5 z-20 bg-black/10">
+                  <div className="retreat-img-top-right absolute right-8 lg:right-12 top-8 lg:top-10 w-[160px] lg:w-[190px] h-[160px] lg:h-[190px] rounded-none overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.6)] border border-white/5 z-20 bg-black/10">
                     <div className="relative w-full h-full bg-transparent">
                       {Array.from({ length: RETREAT_SLICE_COUNT }).map((_, i) => (
                         <div
@@ -354,7 +354,7 @@ export function Caribbean() {
                   </div>
 
                   {/* Bottom Right Corner Square Image */}
-                  <div className="retreat-img-bottom-right absolute right-8 lg:right-12 bottom-8 lg:bottom-10 w-[130px] lg:w-[150px] h-[130px] lg:h-[150px] rounded-none overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.6)] border border-white/5 z-20 bg-black/10">
+                  <div className="retreat-img-bottom-right absolute right-8 lg:right-12 bottom-8 lg:bottom-10 w-[160px] lg:w-[190px] h-[160px] lg:h-[190px] rounded-none overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.6)] border border-white/5 z-20 bg-black/10">
                     <div className="relative w-full h-full bg-transparent">
                       {Array.from({ length: RETREAT_SLICE_COUNT }).map((_, i) => (
                         <div
