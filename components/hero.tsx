@@ -15,47 +15,42 @@ export function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   
-  const imagesRef = useRef<HTMLImageElement[]>([]);
-  const frameRef = useRef({ index: 1 });
-  const renderRequested = useRef(false);
-
   useEffect(() => {
-    let loadedCount = 0;
-    const loadedImages: HTMLImageElement[] = [];
     let animation: gsap.core.Tween | null = null;
-    let lastDrawnImage: HTMLImageElement | null = null;
+    let lastDrawnBitmap: ImageBitmap | HTMLImageElement | null = null;
+    const loadedBitmaps: (ImageBitmap | HTMLImageElement)[] = [];
 
     const renderFrame = () => {
       const canvas = canvasRef.current;
       const context = canvas?.getContext('2d');
       const currentIndex = Math.floor(frameRef.current.index);
       
-      let img = loadedImages[currentIndex];
+      let bitmap = loadedBitmaps[currentIndex];
       
       // Progressive fallback: if current frame is not loaded yet,
       // find and render the nearest loaded frame for zero-latency scrolling.
-      if (!img || !img.complete) {
+      if (!bitmap) {
         for (let offset = 1; offset <= TOTAL_FRAMES; offset++) {
           const prev = currentIndex - offset;
           const next = currentIndex + offset;
-          if (prev >= 1 && loadedImages[prev] && loadedImages[prev].complete) {
-            img = loadedImages[prev];
+          if (prev >= 1 && loadedBitmaps[prev]) {
+            bitmap = loadedBitmaps[prev];
             break;
           }
-          if (next <= TOTAL_FRAMES && loadedImages[next] && loadedImages[next].complete) {
-            img = loadedImages[next];
+          if (next <= TOTAL_FRAMES && loadedBitmaps[next]) {
+            bitmap = loadedBitmaps[next];
             break;
           }
         }
       }
 
-      if (canvas && context && img && img.complete) {
-        // Skip drawing if the image is exactly the same as last rendered frame
-        if (lastDrawnImage === img && canvas.width > 0) {
+      if (canvas && context && bitmap) {
+        // Skip drawing if the bitmap is exactly the same as last rendered frame
+        if (lastDrawnBitmap === bitmap && canvas.width > 0) {
           renderRequested.current = false;
           return;
         }
-        lastDrawnImage = img;
+        lastDrawnBitmap = bitmap;
 
         const ratio = window.devicePixelRatio || 1;
         const width = document.documentElement.clientWidth || window.innerWidth;
@@ -68,7 +63,7 @@ export function Hero() {
         context.imageSmoothingQuality = 'high';
         context.scale(ratio, ratio);
 
-        const imgRatio = img.width / img.height;
+        const imgRatio = bitmap.width / bitmap.height;
         const canvasRatio = width / height;
         
         let drawWidth, drawHeight, offsetX, offsetY;
@@ -86,7 +81,7 @@ export function Hero() {
         }
 
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+        context.drawImage(bitmap, offsetX, offsetY, drawWidth, drawHeight);
       }
       renderRequested.current = false;
     };
@@ -119,84 +114,83 @@ export function Hero() {
       });
     };
 
-    // Initialize scroll animation immediately so pinning order in GSAP is correct
-    initScrollAnimation();
+    const startHybridPreload = () => {
+      const isMobile = window.innerWidth < 768;
+      const initialLimit = isMobile ? 25 : 50;
 
-    // 1. Load the first frame immediately to display the hero section instantly
-    const firstImg = new Image();
-    firstImg.src = '/frames-webp/ezgif-frame-001.webp';
-    firstImg.onload = () => {
-      loadedImages[1] = firstImg;
-      imagesRef.current = loadedImages;
-      requestRender();
-      ScrollTrigger.refresh();
-      
-      // 2. Preload remaining frames progressively in the background.
-      if (typeof window !== 'undefined') {
-        const startPreload = () => {
-          setTimeout(preloadRemainingImages, 100);
-        };
-        if (document.readyState === 'complete') {
-          startPreload();
-        } else {
-          window.addEventListener('load', startPreload);
-          return () => window.removeEventListener('load', startPreload);
-        }
-      }
-    };
+      // Build queue prioritizing initial frames
+      const loadQueue: number[] = [];
+      for (let i = 2; i <= initialLimit; i++) loadQueue.push(i);
 
-    const preloadRemainingImages = () => {
-      // Prioritize Keyframes: Load every 10th frame first (10, 20, 30... 250)
-      const keyframes: number[] = [];
-      for (let i = 10; i <= TOTAL_FRAMES; i += 10) {
-        keyframes.push(i);
-      }
-      
-      // Secondary: Load all remaining intermediate frames
-      const normalFrames: number[] = [];
-      for (let i = 2; i <= TOTAL_FRAMES; i++) {
-        if (i % 10 !== 0) normalFrames.push(i);
+      // Background batch 1 (key frames every 5th frame)
+      for (let i = initialLimit + 1; i <= TOTAL_FRAMES; i += 5) {
+        loadQueue.push(i);
       }
 
-      const loadQueue = [...keyframes, ...normalFrames];
+      // Background batch 2 (remaining frames)
+      for (let i = initialLimit + 1; i <= TOTAL_FRAMES; i++) {
+        if ((i - (initialLimit + 1)) % 5 !== 0) loadQueue.push(i);
+      }
+
       let queueIndex = 0;
 
-      const loadNext = () => {
+      const loadNext = async () => {
         if (queueIndex >= loadQueue.length) return;
 
         const i = loadQueue[queueIndex++];
         if (!i) return;
 
-        const img = new Image();
-        img.decoding = 'async';
-        img.fetchPriority = i <= 30 ? 'high' : 'low';
         const frameNum = i.toString().padStart(3, '0');
-        img.src = `/frames-webp/ezgif-frame-${frameNum}.webp`;
+        const url = `/frames-webp/ezgif-frame-${frameNum}.webp`;
 
-        img.onload = () => {
-          loadedCount++;
-          loadedImages[i] = img;
-          
-          // Render if user is looking near this frame
-          const currentPos = Math.floor(frameRef.current.index);
-          if (Math.abs(currentPos - i) <= 15) {
-            requestRender();
+        try {
+          if (typeof window !== 'undefined' && window.createImageBitmap) {
+            const response = await fetch(url, { priority: i <= initialLimit ? 'high' : 'low' } as RequestInit);
+            const blob = await response.blob();
+            const bitmap = await window.createImageBitmap(blob);
+            loadedBitmaps[i] = bitmap;
+          } else {
+            // Fallback for older browsers
+            const img = new Image();
+            img.decoding = 'async';
+            img.src = url;
+            await new Promise((resolve) => {
+              img.onload = () => {
+                loadedBitmaps[i] = img;
+                resolve(true);
+              };
+              img.onerror = () => resolve(false);
+            });
           }
-          loadNext();
-        };
 
-        img.onerror = () => {
-          loadedCount++;
-          loadNext();
-        };
+          // Re-render if looking near this frame
+          requestRender();
+        } catch (e) {
+          // Silently catch network drops and continue queue
+        }
+
+        loadNext();
       };
 
-      // Start 4 concurrent loader workers for rapid keyframe fetching
-      for (let q = 0; q < 4; q++) {
+      // Start 3 concurrent workers
+      for (let w = 0; w < 3; w++) {
         loadNext();
       }
+    };
 
-      imagesRef.current = loadedImages;
+    // Load Frame 1 instantly
+    const firstImg = new Image();
+    firstImg.src = '/frames-webp/ezgif-frame-001.webp';
+    firstImg.onload = () => {
+      loadedBitmaps[1] = firstImg;
+      requestRender();
+      initScrollAnimation();
+      ScrollTrigger.refresh();
+      
+      // Start background hybrid queue
+      if (typeof window !== 'undefined') {
+        setTimeout(startHybridPreload, 50);
+      }
     };
 
     (window as any).resetHeroToStart = () => {
