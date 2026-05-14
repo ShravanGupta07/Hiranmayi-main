@@ -128,7 +128,6 @@ export function Hero() {
     firstImg.onload = () => {
       loadedImages[1] = firstImg;
       imagesRef.current = loadedImages;
-      setIsLoaded(true);
       requestRender();
       ScrollTrigger.refresh();
       
@@ -161,6 +160,8 @@ export function Hero() {
 
       const loadQueue = [...keyframes, ...normalFrames];
       let queueIndex = 0;
+      let loadedKeyframesCount = 0;
+      const totalKeyframes = keyframes.length;
 
       const loadNext = () => {
         if (queueIndex >= loadQueue.length) return;
@@ -170,14 +171,24 @@ export function Hero() {
 
         const img = new Image();
         img.decoding = 'async';
-        img.fetchPriority = 'low';
+        img.fetchPriority = i % 10 === 0 ? 'high' : 'low';
         const frameNum = i.toString().padStart(3, '0');
         img.src = `/frames-webp/ezgif-frame-${frameNum}.webp`;
 
         img.onload = () => {
           loadedCount++;
           loadedImages[i] = img;
-          setLoadingProgress(Math.round((loadedCount / TOTAL_FRAMES) * 100));
+          
+          if (i % 10 === 0) {
+            loadedKeyframesCount++;
+            const progress = Math.min(100, Math.round((loadedKeyframesCount / totalKeyframes) * 100));
+            setLoadingProgress(progress);
+            if (loadedKeyframesCount >= totalKeyframes) {
+              setIsLoaded(true);
+            }
+          } else if (loadedKeyframesCount >= totalKeyframes) {
+            setLoadingProgress(100);
+          }
           
           // Render if user is looking near this frame
           const currentPos = Math.floor(frameRef.current.index);
@@ -189,12 +200,20 @@ export function Hero() {
 
         img.onerror = () => {
           loadedCount++;
+          if (i % 10 === 0) {
+            loadedKeyframesCount++;
+            const progress = Math.min(100, Math.round((loadedKeyframesCount / totalKeyframes) * 100));
+            setLoadingProgress(progress);
+            if (loadedKeyframesCount >= totalKeyframes) {
+              setIsLoaded(true);
+            }
+          }
           loadNext();
         };
       };
 
-      // Start 3 concurrent loader workers for optimal bandwidth sharing without congestion
-      for (let q = 0; q < 3; q++) {
+      // Start 4 concurrent loader workers for rapid keyframe fetching
+      for (let q = 0; q < 4; q++) {
         loadNext();
       }
 
@@ -250,20 +269,23 @@ export function Hero() {
                   />
                 </motion.div>
                 
-                {/* Premium Golden Loading Progress Line */}
-                <div className="h-[2px] w-40 overflow-hidden rounded-full bg-[#D1A26C]/20 relative">
-                  <motion.div 
-                    className="absolute h-full left-0 top-0 bg-gradient-to-r from-[#D1A26C] to-[#EAE5D9]"
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 1.8, ease: "linear", repeat: Infinity }}
-                  />
+                {/* Premium Golden Loading Progress Bar */}
+                <div className="flex flex-col items-center gap-2 w-48 md:w-56">
+                  <div className="h-[2px] w-full overflow-hidden rounded-full bg-[#D1A26C]/20 relative">
+                    <motion.div 
+                      className="absolute h-full left-0 top-0 bg-gradient-to-r from-[#D1A26C] to-[#EAE5D9]"
+                      style={{ width: `${loadingProgress}%`, transition: 'width 0.3s ease-out' }}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center w-full px-1">
+                    <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-[#EAE5D9]/60">
+                      Loading Sanctuary
+                    </span>
+                    <span className="font-mono text-[10px] text-[#D1A26C] tracking-widest font-bold">
+                      {loadingProgress}%
+                    </span>
+                  </div>
                 </div>
-                
-                {/* Understated dynamic message */}
-                <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-[#EAE5D9]/50 animate-pulse">
-                  Entering Sanctuary...
-                </span>
               </div>
             </motion.div>
           )}
