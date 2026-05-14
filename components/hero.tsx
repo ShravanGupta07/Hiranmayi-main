@@ -111,7 +111,7 @@ export function Hero() {
           trigger: containerRef.current,
           start: 'top top',
           end: '+=500%',
-          scrub: 1,
+          scrub: true,
           pin: true,
           anticipatePin: 1,
           onUpdate: () => requestRender(),
