@@ -63,7 +63,7 @@ export function Caribbean() {
           start: 'top top',
           end: `+=${scrollTriggerLength}%`,
           pin: true,
-          scrub: 1,
+          scrub: true, // Flawless 1:1 synchronization with Lenis smooth scrolling
           anticipatePin: 1,
           onEnter: () => {
             const h = document.querySelector('.site-header-nav');
@@ -260,7 +260,7 @@ export function Caribbean() {
                     {Array.from({ length: RETREAT_SLICE_COUNT }).map((_, i) => (
                       <div
                         key={i}
-                        className="retreat-slice-strip-gsap absolute left-0 w-full overflow-hidden"
+                        className="retreat-slice-strip-gsap absolute left-0 w-full overflow-hidden will-change-transform [transform:translateZ(0)]"
                         style={{
                           top: `${i * (100 / RETREAT_SLICE_COUNT)}%`,
                           height: `${100 / RETREAT_SLICE_COUNT}%`,
@@ -274,7 +274,8 @@ export function Caribbean() {
                             height: `${RETREAT_SLICE_COUNT * 100}%`,
                             top: `-${i * 100}%`,
                           }}
-                          loading="eager"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
                     ))}
@@ -332,7 +333,7 @@ export function Caribbean() {
                       {Array.from({ length: RETREAT_SLICE_COUNT }).map((_, i) => (
                         <div
                           key={i}
-                          className="retreat-slice-strip-gsap absolute left-0 w-full overflow-hidden"
+                          className="retreat-slice-strip-gsap absolute left-0 w-full overflow-hidden will-change-transform [transform:translateZ(0)]"
                           style={{
                             top: `${i * (100 / RETREAT_SLICE_COUNT)}%`,
                             height: `${100 / RETREAT_SLICE_COUNT}%`,
@@ -346,7 +347,8 @@ export function Caribbean() {
                               height: `${RETREAT_SLICE_COUNT * 100}%`,
                               top: `-${i * 100}%`,
                             }}
-                            loading="eager"
+                            loading="lazy"
+                            decoding="async"
                           />
                         </div>
                       ))}
@@ -359,7 +361,7 @@ export function Caribbean() {
                       {Array.from({ length: RETREAT_SLICE_COUNT }).map((_, i) => (
                         <div
                           key={i}
-                          className="retreat-slice-strip-gsap absolute left-0 w-full overflow-hidden"
+                          className="retreat-slice-strip-gsap absolute left-0 w-full overflow-hidden will-change-transform [transform:translateZ(0)]"
                           style={{
                             top: `${i * (100 / RETREAT_SLICE_COUNT)}%`,
                             height: `${100 / RETREAT_SLICE_COUNT}%`,
@@ -373,7 +375,8 @@ export function Caribbean() {
                               height: `${RETREAT_SLICE_COUNT * 100}%`,
                               top: `-${i * 100}%`,
                             }}
-                            loading="eager"
+                            loading="lazy"
+                            decoding="async"
                           />
                         </div>
                       ))}

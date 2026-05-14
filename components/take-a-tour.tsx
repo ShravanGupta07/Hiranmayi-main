@@ -56,7 +56,7 @@ export function TakeATour() {
           start: 'top top',
           end: `+=${scrollTriggerLength}%`,
           pin: true,
-          scrub: 1, // Smooth, precise 1:1 wheel scrubbing feel
+          scrub: true, // Flawless 1:1 synchronization with Lenis smooth scrolling
           anticipatePin: 1,
           // Automatically hide navbar on pin, and show again on completion/reversion
           onEnter: () => {
@@ -263,7 +263,7 @@ export function TakeATour() {
                   {Array.from({ length: SLICE_COUNT }).map((_, i) => (
                     <div
                       key={i}
-                      className="tour-slice-strip-gsap absolute left-0 w-full overflow-hidden"
+                      className="tour-slice-strip-gsap absolute left-0 w-full overflow-hidden will-change-transform [transform:translateZ(0)]"
                       style={{
                         top: `${i * (100 / SLICE_COUNT)}%`,
                         height: `${100 / SLICE_COUNT}%`,
@@ -277,7 +277,8 @@ export function TakeATour() {
                           height: `${SLICE_COUNT * 100}%`,
                           top: `-${i * 100}%`,
                         }}
-                        loading="eager"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   ))}
@@ -298,7 +299,7 @@ export function TakeATour() {
                   {Array.from({ length: SLICE_COUNT }).map((_, i) => (
                     <div
                       key={i}
-                      className="tour-slice-strip-gsap absolute left-0 w-full overflow-hidden"
+                      className="tour-slice-strip-gsap absolute left-0 w-full overflow-hidden will-change-transform [transform:translateZ(0)]"
                       style={{
                         top: `${i * (100 / SLICE_COUNT)}%`,
                         height: `${100 / SLICE_COUNT}%`,
@@ -312,7 +313,8 @@ export function TakeATour() {
                           height: `${SLICE_COUNT * 100}%`,
                           top: `-${i * 100}%`,
                         }}
-                        loading="eager"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   ))}

@@ -82,7 +82,7 @@ export function Services() {
           trigger: sectionRef.current,
           start: 'top 85%',
           end: 'top 15%',
-          scrub: 1,
+          scrub: true,
         },
       });
 
