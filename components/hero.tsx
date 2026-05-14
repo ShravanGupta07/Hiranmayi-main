@@ -160,8 +160,8 @@ export function Hero() {
 
       const loadQueue = [...keyframes, ...normalFrames];
       let queueIndex = 0;
-      let loadedKeyframesCount = 0;
-      const totalKeyframes = keyframes.length;
+      let loadedInitialCount = 0;
+      const requiredInitial = 3; // Wait for frames 10, 20, and 30 for lightning-fast entry!
 
       const loadNext = () => {
         if (queueIndex >= loadQueue.length) return;
@@ -171,7 +171,7 @@ export function Hero() {
 
         const img = new Image();
         img.decoding = 'async';
-        img.fetchPriority = i % 10 === 0 ? 'high' : 'low';
+        img.fetchPriority = i <= 30 ? 'high' : 'low';
         const frameNum = i.toString().padStart(3, '0');
         img.src = `/frames-webp/ezgif-frame-${frameNum}.webp`;
 
@@ -179,14 +179,14 @@ export function Hero() {
           loadedCount++;
           loadedImages[i] = img;
           
-          if (i % 10 === 0) {
-            loadedKeyframesCount++;
-            const progress = Math.min(100, Math.round((loadedKeyframesCount / totalKeyframes) * 100));
+          if (i <= 30 && i % 10 === 0) {
+            loadedInitialCount++;
+            const progress = Math.min(100, Math.round((loadedInitialCount / requiredInitial) * 100));
             setLoadingProgress(progress);
-            if (loadedKeyframesCount >= totalKeyframes) {
+            if (loadedInitialCount >= requiredInitial) {
               setIsLoaded(true);
             }
-          } else if (loadedKeyframesCount >= totalKeyframes) {
+          } else if (loadedInitialCount >= requiredInitial) {
             setLoadingProgress(100);
           }
           
@@ -200,11 +200,11 @@ export function Hero() {
 
         img.onerror = () => {
           loadedCount++;
-          if (i % 10 === 0) {
-            loadedKeyframesCount++;
-            const progress = Math.min(100, Math.round((loadedKeyframesCount / totalKeyframes) * 100));
+          if (i <= 30 && i % 10 === 0) {
+            loadedInitialCount++;
+            const progress = Math.min(100, Math.round((loadedInitialCount / requiredInitial) * 100));
             setLoadingProgress(progress);
-            if (loadedKeyframesCount >= totalKeyframes) {
+            if (loadedInitialCount >= requiredInitial) {
               setIsLoaded(true);
             }
           }
