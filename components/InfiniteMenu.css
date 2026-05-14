@@ -146,8 +146,8 @@
   .face-title {
     font-size: 1.25rem;
     left: 4%;
-    max-width: 140px;
-    top: 25%;
+    max-width: 150px;
+    top: 0%;
     transform: none;
   }
   .face-title.active {
@@ -158,10 +158,10 @@
   }
   
   .face-description {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     right: 4%;
-    max-width: 140px;
-    top: 25%;
+    max-width: 150px;
+    top: 0%;
     transform: none;
   }
   .face-description.active {

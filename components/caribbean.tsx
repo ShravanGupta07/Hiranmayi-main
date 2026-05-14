@@ -85,10 +85,11 @@ export function Caribbean() {
       });
 
       // --- PHASE 1: Card Expansion (0.0 to 0.25) ---
+      const isMobile = window.innerWidth < 768;
       tl.fromTo(cardRef.current, 
         {
-          width: '34.3786vw',
-          height: '80.6996vh',
+          width: isMobile ? '88vw' : '34.3786vw',
+          height: isMobile ? '85vh' : '80.6996vh',
           borderRadius: '0px'
         },
         {

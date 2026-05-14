@@ -127,7 +127,7 @@ export function Header() {
           <div className="relative flex items-center justify-between w-full min-h-[32px] md:min-h-[36px]">
             
             {/* LEFT SIDE: Menu Button + Portfolio Direct Link */}
-            <div className="flex items-center gap-6 md:gap-10 z-10">
+            <div className="flex items-center gap-4 md:gap-10 z-10">
               <button 
                 onClick={() => setIsMenuOpen(true)}
                 className={`group flex items-center gap-3 ${textColor} hover:text-[#d1a26c] transition-colors focus:outline-none cursor-pointer`}
@@ -137,7 +137,7 @@ export function Header() {
                   <span className={`h-[1.5px] w-6 ${hamburgerBg} group-hover:bg-[#d1a26c] transition-all duration-300 group-hover:translate-x-1`} />
                   <span className={`h-[1.5px] w-4 ${hamburgerBg} group-hover:bg-[#d1a26c] transition-all duration-300 group-hover:w-6`} />
                 </div>
-                <span className="text-[10px] md:text-xs tracking-[0.25em] uppercase font-sans">
+                <span className="hidden sm:inline text-xs tracking-[0.25em] uppercase font-sans">
                   MENU
                 </span>
               </button>
@@ -145,7 +145,7 @@ export function Header() {
               <a 
                 href="#projects"
                 onClick={(e) => handleSmoothScroll(e, '#projects')}
-                className={`hidden sm:inline-block text-[10px] md:text-xs tracking-[0.25em] uppercase ${subTextColor} hover:text-[#d1a26c] transition-colors font-sans`}
+                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${subTextColor} hover:text-[#d1a26c] transition-colors font-sans`}
               >
                 PROJECTS
               </a>
@@ -158,7 +158,8 @@ export function Header() {
                 onClick={(e) => handleSmoothScroll(e, '#contact')}
                 className={`text-[10px] md:text-xs tracking-[0.25em] uppercase ${textColor} hover:text-[#d1a26c] transition-colors font-sans`}
               >
-                CONTACT US
+                <span className="sm:hidden">CONTACT</span>
+                <span className="hidden sm:inline">CONTACT US</span>
               </a>
             </div>
 
@@ -175,7 +176,7 @@ export function Header() {
             <img 
               src="/Hir_Logo-768x140-removebg-preview.png" 
               alt="HIRANMAYI" 
-              className={`${isScrolled ? 'h-7 md:h-8' : 'h-10 md:h-12'} w-auto object-contain brightness-100 group-hover:brightness-110 transition-all duration-500`}
+              className={`${isScrolled ? 'h-5 md:h-8' : 'h-6 md:h-12'} w-auto object-contain brightness-100 group-hover:brightness-110 transition-all duration-500`}
             />
           </a>
         </div>
