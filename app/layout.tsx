@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   description: 'Experience sophisticated green luxury and tranquil villa living in the heart of nature.',
   generator: 'v0.app',
   icons: {
-    icon: '/favicon.png',
-    apple: '/favicon.png',
+    icon: '/favicon.png?v=2',
+    apple: '/favicon.png?v=2',
   },
 }
 
