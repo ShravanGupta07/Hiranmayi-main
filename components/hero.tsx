@@ -15,6 +15,9 @@ export function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   
+  const frameRef = useRef({ index: 1 });
+  const renderRequested = useRef(false);
+
   useEffect(() => {
     let animation: gsap.core.Tween | null = null;
     let lastDrawnBitmap: ImageBitmap | HTMLImageElement | null = null;
