@@ -165,8 +165,8 @@ export function Header() {
           </div>
         </div>
 
-        {/* CENTER: Official Brand Logo Image (Absolute Viewport Centered) */}
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-20">
+        {/* CENTER: Official Brand Logo Image (Absolute Viewport Centered with Optical Nudge for Peacock Weighting) */}
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-20 pl-2 md:pl-3">
           <a 
             href="#hero"
             onClick={(e) => handleSmoothScroll(e, '#hero')}
