@@ -156,10 +156,9 @@ export function Header() {
               <a 
                 href="#contact"
                 onClick={(e) => handleSmoothScroll(e, '#contact')}
-                className={`text-[10px] md:text-xs tracking-[0.25em] uppercase ${textColor} hover:text-[#d1a26c] transition-colors font-sans`}
+                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${textColor} hover:text-[#d1a26c] transition-colors font-sans`}
               >
-                <span className="sm:hidden">CONTACT</span>
-                <span className="hidden sm:inline">CONTACT US</span>
+                CONTACT US
               </a>
             </div>
 
