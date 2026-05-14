@@ -212,8 +212,16 @@ export function Hero() {
     };
   }, []);
 
-  // Smooth cinematic 4.5-second preloader progress timer
+  // Smooth cinematic 4.5-second preloader progress timer (bypass on reload/subsequent visits)
   useEffect(() => {
+    const alreadyVisited = sessionStorage.getItem('hiranmayi_preloaded') === 'true';
+
+    if (alreadyVisited) {
+      setIsLoaded(true);
+      setLoadingProgress(100);
+      return;
+    }
+
     const startTime = Date.now();
     const duration = 4500; // Exactly 4.5 seconds to 100%
 
@@ -224,6 +232,7 @@ export function Hero() {
 
       if (progress >= 100) {
         clearInterval(timer);
+        sessionStorage.setItem('hiranmayi_preloaded', 'true');
         setIsLoaded(true);
       }
     }, 45);
