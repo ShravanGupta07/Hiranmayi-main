@@ -196,12 +196,12 @@ export function TakeATour() {
       {/* ScrollTrigger Pin Target */}
       <section
         ref={triggerRef}
-        className="relative w-full h-screen flex flex-col lg:flex-row items-center justify-between px-6 md:px-12 lg:px-24 py-16 overflow-hidden select-none bg-[#E8F5E9]"
+        className="relative w-full min-h-screen lg:h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between px-6 md:px-12 lg:px-24 pt-28 pb-16 lg:py-16 overflow-hidden select-none bg-[#E8F5E9] gap-8 lg:gap-0"
       >
         
         {/* Header Label: Centered at the top of the section */}
         <div className="absolute top-8 left-0 right-0 mx-auto flex flex-col items-center text-center z-20 gap-2">
-          <span className="font-serif text-3xl md:text-4xl lg:text-[2.6rem] font-medium text-[#0A1D0F] tracking-wide leading-tight">
+          <span className="font-serif text-2xl md:text-4xl lg:text-[2.6rem] font-medium text-[#0A1D0F] tracking-wide leading-tight">
             An Immersive Journey
           </span>
           <div className="w-12 h-[1px] bg-[#1B5E20]/60" />
@@ -211,33 +211,33 @@ export function TakeATour() {
         <div className="w-full lg:w-[42%] flex flex-col justify-center h-full z-10 relative">
           
           {/* Progress bar container and text block */}
-          <div className="flex items-start gap-6 h-[260px] relative mt-4">
+          <div className="flex items-start gap-6 h-[200px] md:h-[260px] relative mt-4">
             
             {/* Vertical Progress Bar */}
-            <div className="w-[1px] h-[260px] bg-[#C8E6C9] relative overflow-hidden rounded-full shrink-0 mt-1">
+            <div className="w-[1px] h-[200px] md:h-[260px] bg-[#C8E6C9] relative overflow-hidden rounded-full shrink-0 mt-1">
               <div className="tour-progress-line-gsap absolute top-0 left-0 w-full bg-[#1B5E20] h-0 transition-shadow duration-300" />
             </div>
             
             {/* Absolute Text Stack */}
-            <div className="relative flex-1 h-[260px]">
+            <div className="relative flex-1 h-[200px] md:h-[260px]">
               {slides.map((slide) => (
                 <div
                   key={slide.id}
                   className="tour-slide-box-gsap absolute left-0 w-full flex flex-col justify-start opacity-0 pointer-events-none"
                   style={{ visibility: 'hidden' }}
                 >
-                  {/* Subtle Milestone Number (Perfectly clear and visible) */}
-                  <span className="tour-number-gsap block font-serif text-4xl md:text-5xl lg:text-[3.2rem] font-medium text-[#2E7D32] mb-2 leading-none">
+                  {/* Subtle Milestone Number */}
+                  <span className="tour-number-gsap block font-serif text-3xl md:text-5xl lg:text-[3.2rem] font-medium text-[#2E7D32] mb-2 leading-none">
                     {slide.number}
                   </span>
 
-                  {/* Title Description (Geometric Serif Typography, elegant uppercase) */}
-                  <h3 className="tour-title-gsap text-2xl md:text-3xl lg:text-[2.2rem] font-serif text-[#0A1D0F] font-medium leading-[1.1] tracking-wide mb-4 uppercase">
+                  {/* Title Description */}
+                  <h3 className="tour-title-gsap text-xl md:text-3xl lg:text-[2.2rem] font-serif text-[#0A1D0F] font-medium leading-[1.1] tracking-wide mb-3 uppercase">
                     {slide.title}
                   </h3>
 
-                  {/* Body Paragraph (Inter Normal 400) */}
-                  <p className="tour-desc-gsap text-[#1B3224]/80 font-sans font-normal text-[13px] leading-[17px] max-w-xs">
+                  {/* Body Paragraph */}
+                  <p className="tour-desc-gsap text-[#1B3224]/80 font-sans font-normal text-xs md:text-[13px] leading-[17px] max-w-xs md:max-w-sm">
                     {slide.description}
                   </p>
                 </div>
