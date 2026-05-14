@@ -12,8 +12,18 @@ const TOTAL_FRAMES = 257;
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('hiranmayi_preloaded') === 'true';
+    }
+    return false;
+  });
+  const [loadingProgress, setLoadingProgress] = useState(() => {
+    if (typeof window !== 'undefined' && sessionStorage.getItem('hiranmayi_preloaded') === 'true') {
+      return 100;
+    }
+    return 0;
+  });
   
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const frameRef = useRef({ index: 1 });
