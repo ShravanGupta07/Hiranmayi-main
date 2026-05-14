@@ -160,8 +160,6 @@ export function Hero() {
 
       const loadQueue = [...keyframes, ...normalFrames];
       let queueIndex = 0;
-      let loadedInitialCount = 0;
-      const requiredInitial = 2; // Wait for frames 10 and 20 for lightning-fast 0.1s entry!
 
       const loadNext = () => {
         if (queueIndex >= loadQueue.length) return;
@@ -179,17 +177,6 @@ export function Hero() {
           loadedCount++;
           loadedImages[i] = img;
           
-          if (i <= 20 && i % 10 === 0) {
-            loadedInitialCount++;
-            const progress = Math.min(100, Math.round((loadedInitialCount / requiredInitial) * 100));
-            setLoadingProgress(progress);
-            if (loadedInitialCount >= requiredInitial) {
-              setIsLoaded(true);
-            }
-          } else if (loadedInitialCount >= requiredInitial) {
-            setLoadingProgress(100);
-          }
-          
           // Render if user is looking near this frame
           const currentPos = Math.floor(frameRef.current.index);
           if (Math.abs(currentPos - i) <= 15) {
@@ -200,14 +187,6 @@ export function Hero() {
 
         img.onerror = () => {
           loadedCount++;
-          if (i <= 20 && i % 10 === 0) {
-            loadedInitialCount++;
-            const progress = Math.min(100, Math.round((loadedInitialCount / requiredInitial) * 100));
-            setLoadingProgress(progress);
-            if (loadedInitialCount >= requiredInitial) {
-              setIsLoaded(true);
-            }
-          }
           loadNext();
         };
       };
@@ -231,6 +210,25 @@ export function Hero() {
       delete (window as any).resetHeroToStart;
       if (animation) animation.kill();
     };
+  }, []);
+
+  // Smooth cinematic 4.5-second preloader progress timer
+  useEffect(() => {
+    const startTime = Date.now();
+    const duration = 4500; // Exactly 4.5 seconds to 100%
+
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(100, Math.floor((elapsed / duration) * 100));
+      setLoadingProgress(progress);
+
+      if (progress >= 100) {
+        clearInterval(timer);
+        setIsLoaded(true);
+      }
+    }, 45);
+
+    return () => clearInterval(timer);
   }, []);
 
   // Lock scrolling while preloader is active
