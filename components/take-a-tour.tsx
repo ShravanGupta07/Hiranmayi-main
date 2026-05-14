@@ -237,7 +237,7 @@ export function TakeATour() {
                   </h3>
 
                   {/* Body Paragraph */}
-                  <p className="tour-desc-gsap text-[#1B3224]/80 font-sans font-normal text-xs md:text-[13px] leading-[17px] max-w-xs md:max-w-sm">
+                  <p className="tour-desc-gsap text-[#1B3224]/90 font-sans font-light text-[13px] md:text-[14px] leading-[1.7] tracking-[0.04em] max-w-xs md:max-w-md">
                     {slide.description}
                   </p>
                 </div>

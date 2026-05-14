@@ -1,6 +1,22 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@font-face {
+  font-family: 'PP Pangaia';
+  src: url('/fonts/pp-pangaia/PPPangaia-Medium-BF654c530cc86d5.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Radio Grotesk';
+  src: url('/fonts/radio-grotesk-font/RadioGrotesk-FreeForPersonalUse/RadioGrotesk-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -188,10 +204,15 @@ html {
   }
 }
 
-/* Global paragraph and body sentence typography (PP Radio Grotesk / Space Grotesk 400) */
+/* Global paragraph and body sentence typography (PP Radio Grotesk) */
 p {
   font-family: 'PP Radio Grotesk', var(--font-space-grotesk), sans-serif !important;
-  font-weight: 400 !important;
+  font-weight: 300 !important;
+  line-height: 1.7 !important;
+  letter-spacing: 0.04em !important;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
 }
 
 /* Hide browser scrollbar across all major browsers while maintaining scroll functionality */

@@ -1,19 +1,20 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk, Cormorant_Garamond } from 'next/font/google'
+import localFont from 'next/font/local'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+const ppRadioGrotesk = localFont({
+  src: '../public/fonts/radio-grotesk-font/RadioGrotesk-FreeForPersonalUse/RadioGrotesk-Regular.otf',
   variable: '--font-space-grotesk',
+  weight: '400',
+  style: 'normal',
 });
 
-const cormorantGaramond = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  style: ['normal', 'italic'],
+const ppPangaia = localFont({
+  src: '../public/fonts/pp-pangaia/PPPangaia-Medium-BF654c530cc86d5.otf',
   variable: '--font-cormorant',
+  weight: '500',
+  style: 'normal',
 });
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-background">
-      <body className={`${spaceGrotesk.variable} ${cormorantGaramond.variable} font-sans antialiased`}>
+      <body className={`${ppRadioGrotesk.variable} ${ppPangaia.variable} font-sans antialiased`}>
         <SmoothScroll>
           {children}
         </SmoothScroll>

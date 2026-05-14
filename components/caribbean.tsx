@@ -311,7 +311,7 @@ export function Caribbean() {
                     </h2>
 
                     {/* 4. Project Description (Content - Two Lines Flow layout width) */}
-                    <p className="text-[#C8E6C9]/90 font-sans font-normal leading-relaxed text-sm md:text-base lg:text-lg max-w-lg lg:max-w-xl px-4 z-10 pointer-events-none mx-auto">
+                    <p className="text-[#E8F5E9]/95 font-sans font-normal leading-[1.65] tracking-[0.035em] text-base md:text-lg max-w-lg lg:max-w-2xl px-4 z-10 pointer-events-none mx-auto">
                       {retreat.description}
                     </p>
 
