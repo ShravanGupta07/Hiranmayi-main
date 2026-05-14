@@ -233,6 +233,21 @@ export function Hero() {
     };
   }, []);
 
+  // Lock scrolling while preloader is active
+  useEffect(() => {
+    if (!isLoaded) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isLoaded]);
+
   return (
     <div id="hero" ref={containerRef} className="relative w-full overflow-hidden bg-[#0B1B12]">
       {/* Sticky Canvas Container */}
@@ -252,7 +267,7 @@ export function Hero() {
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-              className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-[#0B1B12]"
+              className="fixed inset-0 z-[100] h-screen w-screen flex flex-col items-center justify-center bg-[#0B1B12]"
             >
               <div className="flex flex-col items-center gap-6">
                 {/* Brand Logo with soft float/fade entry */}
