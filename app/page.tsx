@@ -1,5 +1,6 @@
 import { Header } from '@/components/header';
 import { Hero } from '@/components/hero';
+import { Mission } from '@/components/mission';
 import { TakeATour } from '@/components/take-a-tour';
 import { Caribbean } from '@/components/caribbean';
 import GallerySection from '@/components/GallerySection';
@@ -13,6 +14,7 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <Mission />
         <TakeATour />
         <Caribbean />
         <GallerySection />

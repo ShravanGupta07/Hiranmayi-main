@@ -188,7 +188,7 @@ export function Caribbean() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full overflow-hidden bg-black">
+    <div id="projects" ref={containerRef} className="relative w-full overflow-hidden bg-black">
       
       {/* ScrollTrigger Container */}
       <div

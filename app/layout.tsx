@@ -17,8 +17,8 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: 'Lumino Collective | Premium Design & Innovation',
-  description: 'Experience sophisticated design and innovation with cutting-edge digital solutions',
+  title: 'Hiranmayi | Green Luxury Villas',
+  description: 'Experience sophisticated green luxury and tranquil villa living in the heart of nature.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -39,6 +39,8 @@ export const metadata: Metadata = {
   },
 }
 
+import { SmoothScroll } from '@/components/smooth-scroll'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,7 +49,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-background">
       <body className={`${spaceGrotesk.variable} ${cormorantGaramond.variable} font-sans antialiased`}>
-        {children}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

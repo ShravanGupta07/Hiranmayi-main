@@ -191,7 +191,7 @@ export function TakeATour() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative bg-[#E8F5E9]">
+    <div id="tour" ref={containerRef} className="relative bg-[#E8F5E9]">
       
       {/* ScrollTrigger Pin Target */}
       <section
@@ -249,10 +249,10 @@ export function TakeATour() {
         </div>
 
         {/* Right Section: Overlapping Architectural Portrait Slices */}
-        <div className="hidden lg:flex w-[50%] h-[72vh] relative items-center justify-center mt-10">
+        <div className="flex w-full lg:w-[50%] h-[42vh] lg:h-[72vh] relative items-center justify-center mt-2 lg:mt-10">
           
           {/* Large Image Frame (Background / Stacked / 3:4 portrait aspect) */}
-          <div className="w-[75%] h-[90%] relative ml-auto mr-4 rounded-none overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.6)] border border-white/5 bg-black/10">
+          <div className="w-[70%] lg:w-[75%] h-[90%] relative ml-auto mr-4 rounded-none overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.6)] border border-white/5 bg-black/10">
             {slides.map((slide) => (
               <div
                 key={slide.id}
@@ -287,7 +287,7 @@ export function TakeATour() {
           </div>
 
           {/* Small Image Frame (Foreground / Stacked / Left Overlap) */}
-          <div className="absolute left-[-5%] top-[22%] w-[42%] h-[56%] z-20 rounded-none overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.7)] border border-white/10 bg-black/10">
+          <div className="absolute left-[-2%] lg:left-[-5%] top-[15%] lg:top-[22%] w-[45%] lg:w-[42%] h-[60%] lg:h-[56%] z-20 rounded-none overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.7)] border border-white/10 bg-black/10">
             {slides.map((slide) => (
               <div
                 key={slide.id}

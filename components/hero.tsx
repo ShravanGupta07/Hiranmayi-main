@@ -3,283 +3,250 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const heroImages = [
-  { id: 1, src: '/hero-1.jpg', alt: 'Luxury Interior Design' },
-  { id: 2, src: '/hero-2.jpg', alt: 'Architectural Photography' },
-  { id: 3, src: '/hero-3.jpg', alt: 'Premium Design Showcase' },
-];
+gsap.registerPlugin(ScrollTrigger);
+
+const TOTAL_FRAMES = 257;
 
 export function Hero() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isAutoplay, setIsAutoplay] = useState(true);
-  const autoplayTimeoutRef = useRef<NodeJS.Timeout>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  
+  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const frameRef = useRef({ index: 1 });
+  const renderRequested = useRef(false);
 
   useEffect(() => {
-    if (!isAutoplay) return;
+    let loadedCount = 0;
+    const loadedImages: HTMLImageElement[] = [];
+    let animation: gsap.core.Tween | null = null;
 
-    autoplayTimeoutRef.current = setTimeout(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
+    const renderFrame = () => {
+      const canvas = canvasRef.current;
+      const context = canvas?.getContext('2d');
+      const currentIndex = Math.floor(frameRef.current.index);
+      
+      let img = loadedImages[currentIndex];
+      
+      // Progressive fallback: if current frame is not loaded yet,
+      // find and render the nearest loaded frame for zero-latency scrolling.
+      if (!img || !img.complete) {
+        for (let offset = 1; offset <= TOTAL_FRAMES; offset++) {
+          const prev = currentIndex - offset;
+          const next = currentIndex + offset;
+          if (prev >= 1 && loadedImages[prev] && loadedImages[prev].complete) {
+            img = loadedImages[prev];
+            break;
+          }
+          if (next <= TOTAL_FRAMES && loadedImages[next] && loadedImages[next].complete) {
+            img = loadedImages[next];
+            break;
+          }
+        }
+      }
 
-    return () => {
-      if (autoplayTimeoutRef.current) clearTimeout(autoplayTimeoutRef.current);
+      if (canvas && context && img && img.complete) {
+        const ratio = window.devicePixelRatio || 1;
+        const width = document.documentElement.clientWidth || window.innerWidth;
+        const height = window.innerHeight;
+
+        canvas.width = width * ratio;
+        canvas.height = height * ratio;
+        
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = 'high';
+        context.scale(ratio, ratio);
+
+        const imgRatio = img.width / img.height;
+        const canvasRatio = width / height;
+        
+        let drawWidth, drawHeight, offsetX, offsetY;
+
+        if (canvasRatio > imgRatio) {
+          drawWidth = width;
+          drawHeight = width / imgRatio;
+          offsetX = 0;
+          offsetY = (height - drawHeight) / 2;
+        } else {
+          drawWidth = height * imgRatio;
+          drawHeight = height;
+          offsetX = (width - drawWidth) / 2;
+          offsetY = 0;
+        }
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+      }
+      renderRequested.current = false;
     };
-  }, [currentImageIndex, isAutoplay]);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.hero-text-line',
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, delay: 0.3 }
-      );
-    }, containerRef);
+    const requestRender = () => {
+      if (!renderRequested.current) {
+        renderRequested.current = true;
+        requestAnimationFrame(renderFrame);
+      }
+    };
 
-    return () => ctx.revert();
+    const initScrollAnimation = () => {
+      if (!containerRef.current || !canvasRef.current) return;
+
+      renderFrame();
+
+      // Main frame sequence animation
+      animation = gsap.to(frameRef.current, {
+        index: TOTAL_FRAMES,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: '+=500%',
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          onUpdate: () => requestRender(),
+        },
+      });
+    };
+
+    // Initialize scroll animation immediately so pinning order in GSAP is correct
+    initScrollAnimation();
+
+    // 1. Load the first frame immediately to display the hero section instantly
+    const firstImg = new Image();
+    firstImg.src = '/frames-webp/ezgif-frame-001.webp';
+    firstImg.onload = () => {
+      loadedImages[1] = firstImg;
+      imagesRef.current = loadedImages;
+      setIsLoaded(true);
+      requestRender();
+      ScrollTrigger.refresh();
+      
+      // 2. Preload remaining frames progressively in the background.
+      if (typeof window !== 'undefined') {
+        const startPreload = () => {
+          setTimeout(preloadRemainingImages, 500);
+        };
+        if (document.readyState === 'complete') {
+          startPreload();
+        } else {
+          window.addEventListener('load', startPreload);
+          return () => window.removeEventListener('load', startPreload);
+        }
+      }
+    };
+
+    const preloadRemainingImages = () => {
+      let nextIndex = 2;
+
+      const loadNext = () => {
+        if (nextIndex > TOTAL_FRAMES) return;
+
+        const i = nextIndex++;
+        const img = new Image();
+        const frameNum = i.toString().padStart(3, '0');
+        img.src = `/frames-webp/ezgif-frame-${frameNum}.webp`;
+
+        img.onload = () => {
+          loadedCount++;
+          loadedImages[i] = img;
+          setLoadingProgress(Math.round((loadedCount / TOTAL_FRAMES) * 100));
+          
+          // Render if the user has already scrolled to this frame
+          if (Math.floor(frameRef.current.index) === i) {
+            requestRender();
+          }
+          loadNext();
+        };
+
+        img.onerror = () => {
+          loadedCount++;
+          loadNext();
+        };
+      };
+
+      // Start 4 concurrent loader queues to load frames rapidly
+      for (let q = 0; q < 4; q++) {
+        loadNext();
+      }
+
+      imagesRef.current = loadedImages;
+    };
+
+    (window as any).resetHeroToStart = () => {
+      frameRef.current.index = 1;
+      requestRender();
+    };
+
+    window.addEventListener('resize', requestRender);
+    return () => {
+      window.removeEventListener('resize', requestRender);
+      delete (window as any).resetHeroToStart;
+      if (animation) animation.kill();
+    };
   }, []);
 
-  const handlePrevImage = () => {
-    setIsAutoplay(false);
-    setCurrentImageIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
-  };
-
-  const handleNextImage = () => {
-    setIsAutoplay(false);
-    setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-  };
-
   return (
-    <div
-      ref={containerRef}
-      style={{
-        position: 'relative',
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundImage: `url('${heroImages[currentImageIndex].src}')`,
-      }}
-    >
-      {/* Overlay Gradient */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.2), rgba(0,0,0,0.5))',
-          zIndex: 1,
-        }}
-      />
+    <div id="hero" ref={containerRef} className="relative w-full overflow-hidden bg-[#0B1B12]">
+      {/* Sticky Canvas Container */}
+      <div className="relative h-screen w-full">
+        
+        {/* Cinematic Canvas */}
+        <canvas
+          ref={canvasRef}
+          className="h-full w-full object-cover"
+          style={{ opacity: isLoaded ? 1 : 0, transition: 'opacity 0.8s ease' }}
+        />
 
-      {/* Content */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px',
-          textAlign: 'center',
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          style={{ maxWidth: '900px' }}
-        >
-          <h1
-            className="hero-text-line"
-            style={{
-              fontSize: 'clamp(2.5rem, 10vw, 4.5rem)',
-              fontWeight: 300,
-              letterSpacing: '-0.02em',
-              color: 'white',
-              marginBottom: '24px',
-              lineHeight: 1.2,
-            }}
-          >
-            Lumino Collective
-          </h1>
-          <p
-            className="hero-text-line"
-            style={{
-              fontSize: 'clamp(1rem, 3vw, 1.5rem)',
-              fontWeight: 300,
-              color: '#f3f4f6',
-              marginBottom: '48px',
-              lineHeight: 1.6,
-            }}
-          >
-            Crafting Exceptional Experiences Through Design & Innovation
-          </p>
+        {/* Premium Minimalist Loader Overlay */}
+        <AnimatePresence>
+          {!isLoaded && (
+            <motion.div
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+              className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-[#0B1B12]"
+            >
+              <div className="flex flex-col items-center gap-6">
+                {/* Brand Logo with soft float/fade entry */}
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, ease: 'easeOut' }}
+                  className="px-6"
+                >
+                  <img 
+                    src="/Hir_Logo-768x140-removebg-preview.png" 
+                    alt="HIRANMAYI" 
+                    className="h-10 md:h-14 w-auto object-contain brightness-100"
+                  />
+                </motion.div>
+                
+                {/* Premium Golden Loading Progress Line */}
+                <div className="h-[2px] w-40 overflow-hidden rounded-full bg-[#D1A26C]/20 relative">
+                  <motion.div 
+                    className="absolute h-full left-0 top-0 bg-gradient-to-r from-[#D1A26C] to-[#EAE5D9]"
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 1.8, ease: "linear", repeat: Infinity }}
+                  />
+                </div>
+                
+                {/* Understated dynamic message */}
+                <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-[#EAE5D9]/50 animate-pulse">
+                  Entering Sanctuary...
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="hero-text-line"
-            onClick={() => {
-              document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            style={{
-              padding: '12px 48px',
-              fontSize: '1.125rem',
-              fontWeight: 300,
-              color: 'white',
-              border: '2px solid rgba(255, 255, 255, 0.8)',
-              backgroundColor: 'transparent',
-              borderRadius: '9999px',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              outline: 'none',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-              e.currentTarget.style.borderColor = 'white';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.8)';
-            }}
-          >
-            Explore Our Work
-          </motion.button>
-        </motion.div>
+        {/* Subtle Vignette */}
+        <div className="pointer-events-none absolute inset-0 z-[15] bg-gradient-to-b from-white/10 via-transparent to-white/10" />
       </div>
 
-      {/* Navigation Arrows */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: 0,
-          right: 0,
-          transform: 'translateY(-50%)',
-          zIndex: 20,
-          display: 'flex',
-          justifyContent: 'space-between',
-          padding: '0 24px',
-        }}
-      >
-        <motion.button
-          whileHover={{ scale: 1.1, x: -5 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={handlePrevImage}
-          style={{
-            width: '48px',
-            height: '48px',
-            borderRadius: '50%',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backdropFilter: 'blur(4px)',
-            transition: 'background-color 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-          }}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M15 19l-7-7 7-7" />
-          </svg>
-        </motion.button>
-
-        <motion.button
-          whileHover={{ scale: 1.1, x: 5 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={handleNextImage}
-          style={{
-            width: '48px',
-            height: '48px',
-            borderRadius: '50%',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backdropFilter: 'blur(4px)',
-            transition: 'background-color 0.3s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-          }}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 5l7 7-7 7" />
-          </svg>
-        </motion.button>
-      </div>
-
-      {/* Navigation Dots */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '32px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 20,
-          display: 'flex',
-          gap: '12px',
-        }}
-      >
-        {heroImages.map((_, index) => (
-          <motion.button
-            key={index}
-            onClick={() => {
-              setIsAutoplay(false);
-              setCurrentImageIndex(index);
-            }}
-            whileHover={{ scale: 1.2 }}
-            style={{
-              height: '8px',
-              borderRadius: '4px',
-              border: 'none',
-              backgroundColor: index === currentImageIndex ? 'white' : 'rgba(255, 255, 255, 0.5)',
-              width: index === currentImageIndex ? '32px' : '8px',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Counter */}
-      <motion.div
-        style={{
-          position: 'absolute',
-          top: '32px',
-          right: '32px',
-          zIndex: 20,
-          color: 'rgba(255, 255, 255, 0.7)',
-          fontSize: '0.875rem',
-          fontWeight: 300,
-          letterSpacing: '0.05em',
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        {currentImageIndex + 1} / {heroImages.length}
-      </motion.div>
     </div>
   );
 }

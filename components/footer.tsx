@@ -9,15 +9,15 @@ export function Footer() {
     <footer className="bg-[#111211] text-white py-16 px-6 lg:px-20">
       <div className="max-w-[1400px] mx-auto">
         
-        {/* Headings Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 pb-6 pt-8">
-          <div className="md:col-span-5 lg:col-span-5">
+        {/* Headings Grid - Desktop Only */}
+        <div className="hidden md:grid md:grid-cols-12 gap-8 pb-6 pt-8">
+          <div className="col-span-5">
             <h4 className="text-white/40 text-[13px] font-sans italic tracking-widest uppercase">(Get in touch)</h4>
           </div>
-          <div className="md:col-span-3 lg:col-span-3">
+          <div className="col-span-3">
             <h4 className="text-white/40 text-[13px] font-sans italic tracking-widest uppercase">(Location)</h4>
           </div>
-          <div className="md:col-span-4 lg:col-span-4">
+          <div className="col-span-4">
             <h4 className="text-white/40 text-[13px] font-sans italic tracking-widest uppercase">(Contact)</h4>
           </div>
         </div>
@@ -28,11 +28,11 @@ export function Footer() {
           whileInView={{ scaleX: 1 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
           viewport={{ once: true }}
-          className="w-full h-[1px] bg-white/10 origin-center"
+          className="w-full h-[1px] bg-white/10 origin-center hidden md:block"
         ></motion.div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 pt-8 pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 pt-8 pb-16">
           
           {/* Column 1 - Brand */}
           <motion.div 
@@ -42,6 +42,7 @@ export function Footer() {
             viewport={{ once: true, margin: "0px 0px -50px 0px" }}
             className="flex flex-col md:col-span-5 lg:col-span-5"
           >
+            <h4 className="text-white/40 text-[11px] font-sans italic tracking-widest uppercase mb-2 md:hidden">(Get in touch)</h4>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-wide">HIRANMAYI</h2>
           </motion.div>
 
@@ -53,6 +54,7 @@ export function Footer() {
             viewport={{ once: true }}
             className="flex flex-col md:col-span-3 lg:col-span-3"
           >
+            <h4 className="text-white/40 text-[11px] font-sans italic tracking-widest uppercase mb-2 md:hidden">(Location)</h4>
             <p className="text-white/90 text-[13px] md:text-sm font-sans font-light leading-relaxed">
               Nashik,<br />
               Maharashtra, India
@@ -67,6 +69,7 @@ export function Footer() {
             viewport={{ once: true }}
             className="flex flex-col md:col-span-4 lg:col-span-4"
           >
+            <h4 className="text-white/40 text-[11px] font-sans italic tracking-widest uppercase mb-2 md:hidden">(Contact)</h4>
             <div className="flex flex-col gap-3">
               <a href="mailto:hiranmayi0422@gmail.com" className="text-white text-base md:text-lg font-serif italic tracking-wide hover:opacity-70 transition-opacity uppercase">
                 HIRANMAYI0422@GMAIL.COM

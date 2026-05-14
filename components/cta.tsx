@@ -76,7 +76,7 @@ export function CTA() {
   }, []);
 
   return (
-    <section id="book-a-visit" ref={sectionRef} className="relative w-full min-h-screen overflow-hidden flex bg-[#111312] pt-24 lg:pt-32 pb-24">
+    <section id="contact" ref={sectionRef} className="relative w-full min-h-screen overflow-hidden flex bg-[#111312] pt-24 lg:pt-32 pb-24">
       {/* Parallax Background */}
       <div className="absolute inset-0 z-0 overflow-hidden bg-[#111312]">
         <video 
