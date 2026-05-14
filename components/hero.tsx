@@ -12,18 +12,9 @@ const TOTAL_FRAMES = 257;
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isLoaded, setIsLoaded] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('hiranmayi_preloaded') === 'true';
-    }
-    return false;
-  });
-  const [loadingProgress, setLoadingProgress] = useState(() => {
-    if (typeof window !== 'undefined' && sessionStorage.getItem('hiranmayi_preloaded') === 'true') {
-      return 100;
-    }
-    return 0;
-  });
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isBypass, setIsBypass] = useState(false);
   
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const frameRef = useRef({ index: 1 });
@@ -227,6 +218,7 @@ export function Hero() {
     const alreadyVisited = sessionStorage.getItem('hiranmayi_preloaded') === 'true';
 
     if (alreadyVisited) {
+      setIsBypass(true);
       setIsLoaded(true);
       setLoadingProgress(100);
       return;
@@ -274,7 +266,7 @@ export function Hero() {
             key="preloader"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+            transition={{ duration: isBypass ? 0 : 0.8, ease: [0.19, 1, 0.22, 1] }}
             className="fixed inset-0 z-[999999] h-screen w-screen flex flex-col items-center justify-center bg-[#0B1B12]"
           >
             <div className="flex flex-col items-center gap-6">
