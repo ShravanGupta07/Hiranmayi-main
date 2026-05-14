@@ -23,6 +23,7 @@ export function Hero() {
     let loadedCount = 0;
     const loadedImages: HTMLImageElement[] = [];
     let animation: gsap.core.Tween | null = null;
+    let lastDrawnImage: HTMLImageElement | null = null;
 
     const renderFrame = () => {
       const canvas = canvasRef.current;
@@ -49,6 +50,13 @@ export function Hero() {
       }
 
       if (canvas && context && img && img.complete) {
+        // Skip drawing if the image is exactly the same as last rendered frame
+        if (lastDrawnImage === img && canvas.width > 0) {
+          renderRequested.current = false;
+          return;
+        }
+        lastDrawnImage = img;
+
         const ratio = window.devicePixelRatio || 1;
         const width = document.documentElement.clientWidth || window.innerWidth;
         const height = window.innerHeight;
@@ -127,7 +135,7 @@ export function Hero() {
       // 2. Preload remaining frames progressively in the background.
       if (typeof window !== 'undefined') {
         const startPreload = () => {
-          setTimeout(preloadRemainingImages, 500);
+          setTimeout(preloadRemainingImages, 100);
         };
         if (document.readyState === 'complete') {
           startPreload();
@@ -139,13 +147,30 @@ export function Hero() {
     };
 
     const preloadRemainingImages = () => {
-      let nextIndex = 2;
+      // Prioritize Keyframes: Load every 10th frame first (10, 20, 30... 250)
+      const keyframes: number[] = [];
+      for (let i = 10; i <= TOTAL_FRAMES; i += 10) {
+        keyframes.push(i);
+      }
+      
+      // Secondary: Load all remaining intermediate frames
+      const normalFrames: number[] = [];
+      for (let i = 2; i <= TOTAL_FRAMES; i++) {
+        if (i % 10 !== 0) normalFrames.push(i);
+      }
+
+      const loadQueue = [...keyframes, ...normalFrames];
+      let queueIndex = 0;
 
       const loadNext = () => {
-        if (nextIndex > TOTAL_FRAMES) return;
+        if (queueIndex >= loadQueue.length) return;
 
-        const i = nextIndex++;
+        const i = loadQueue[queueIndex++];
+        if (!i) return;
+
         const img = new Image();
+        img.decoding = 'async';
+        img.fetchPriority = 'low';
         const frameNum = i.toString().padStart(3, '0');
         img.src = `/frames-webp/ezgif-frame-${frameNum}.webp`;
 
@@ -154,8 +179,9 @@ export function Hero() {
           loadedImages[i] = img;
           setLoadingProgress(Math.round((loadedCount / TOTAL_FRAMES) * 100));
           
-          // Render if the user has already scrolled to this frame
-          if (Math.floor(frameRef.current.index) === i) {
+          // Render if user is looking near this frame
+          const currentPos = Math.floor(frameRef.current.index);
+          if (Math.abs(currentPos - i) <= 15) {
             requestRender();
           }
           loadNext();
@@ -167,8 +193,8 @@ export function Hero() {
         };
       };
 
-      // Start 4 concurrent loader queues to load frames rapidly
-      for (let q = 0; q < 4; q++) {
+      // Start 3 concurrent loader workers for optimal bandwidth sharing without congestion
+      for (let q = 0; q < 3; q++) {
         loadNext();
       }
 
