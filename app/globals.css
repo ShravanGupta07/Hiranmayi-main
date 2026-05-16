@@ -235,3 +235,28 @@ html, body {
   background-color: #0B1B12 !important;
 }
 
+/* Premium Link Flash Animation */
+.link-flash {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.link-flash::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.65s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.link-flash:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+

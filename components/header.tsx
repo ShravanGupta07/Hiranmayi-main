@@ -137,15 +137,15 @@ export function Header() {
                   <span className={`h-[1.5px] w-6 ${hamburgerBg} group-hover:bg-[#d1a26c] transition-all duration-300 group-hover:translate-x-1`} />
                   <span className={`h-[1.5px] w-4 ${hamburgerBg} group-hover:bg-[#d1a26c] transition-all duration-300 group-hover:w-6`} />
                 </div>
-                <span className="hidden sm:inline text-xs tracking-[0.25em] uppercase font-sans">
+                <span className="hidden sm:inline text-xs tracking-[0.25em] uppercase font-serif">
                   MENU
                 </span>
               </button>
 
               <a 
-                href="#projects"
-                onClick={(e) => handleSmoothScroll(e, '#projects')}
-                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${subTextColor} hover:text-[#d1a26c] transition-colors font-sans`}
+                href="#featured-projects"
+                onClick={(e) => handleSmoothScroll(e, '#featured-projects')}
+                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${subTextColor} hover:text-[#d1a26c] transition-colors font-serif`}
               >
                 PROJECTS
               </a>
@@ -156,7 +156,7 @@ export function Header() {
               <a 
                 href="#contact"
                 onClick={(e) => handleSmoothScroll(e, '#contact')}
-                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${textColor} hover:text-[#d1a26c] transition-colors font-sans`}
+                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${textColor} hover:text-[#d1a26c] transition-colors font-serif`}
               >
                 CONTACT US
               </a>
@@ -165,8 +165,8 @@ export function Header() {
           </div>
         </div>
 
-        {/* CENTER: Official Brand Logo Image (Absolute Viewport Centered with Optical Nudge for Peacock Weighting) */}
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-20 pl-2 md:pl-3">
+        {/* CENTER: Official Brand Logo Image (Absolute Viewport Centered) */}
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-20">
           <a 
             href="#hero"
             onClick={(e) => handleSmoothScroll(e, '#hero')}
@@ -210,7 +210,7 @@ export function Header() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </div>
-                  <span className="text-[10px] tracking-[0.25em] uppercase font-sans">CLOSE</span>
+                  <span className="text-[10px] tracking-[0.25em] uppercase font-serif">CLOSE</span>
                 </button>
               </div>
 
@@ -226,7 +226,7 @@ export function Header() {
                     onMouseEnter={() => setHoveredIndex(index)}
                   >
                     {/* Golden Index Number */}
-                    <span className="font-sans text-xs md:text-sm font-medium tracking-[0.2em] text-[#d1a26c]/50 group-hover:text-[#d1a26c] transition-colors">
+                    <span className="font-serif text-xs md:text-sm font-medium tracking-[0.2em] text-[#d1a26c]/50 group-hover:text-[#d1a26c] transition-colors">
                       {item.number}
                     </span>
 
@@ -270,7 +270,7 @@ export function Header() {
                   
                   {/* Aesthetic Text Overlay on Image Side */}
                   <div className="absolute bottom-14 left-12 right-12 z-10 flex flex-col gap-2">
-                    <span className="text-[10px] font-semibold tracking-[0.3em] text-[#d1a26c] uppercase font-sans">
+                    <span className="text-[10px] font-semibold tracking-[0.3em] text-[#d1a26c] uppercase font-serif">
                       {navItems[hoveredIndex].subtitle}
                     </span>
                     <span className="font-serif text-2xl font-light leading-relaxed text-[#EAE5D9] max-w-sm">

@@ -28,6 +28,7 @@ export const metadata: Metadata = {
 }
 
 import { SmoothScroll } from '@/components/smooth-scroll'
+import { HashScrollFix } from '@/components/hash-scroll-fix'
 
 export default function RootLayout({
   children,
@@ -35,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="bg-background">
+    <html lang="en" className="bg-background" data-scroll-behavior="smooth">
       <body className={`${ppRadioGrotesk.variable} ${ppPangaia.variable} font-sans antialiased`}>
         <SmoothScroll>
           {children}

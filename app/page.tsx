@@ -7,16 +7,20 @@ import GallerySection from '@/components/GallerySection';
 import { Services } from '@/components/services';
 import { CTA } from '@/components/cta';
 import { Footer } from '@/components/footer';
+import { ScrollHandler } from '@/components/scroll-handler';
 
 export default function Home() {
   return (
     <div className="overflow-x-hidden">
+      <ScrollHandler />
       <Header />
       <main>
         <Hero />
         <Mission />
         <TakeATour />
-        <Caribbean />
+        <div id="featured-projects">
+          <Caribbean />
+        </div>
         <GallerySection />
         <Services />
         <CTA />

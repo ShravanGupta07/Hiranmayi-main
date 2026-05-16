@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { motion } from 'framer-motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -189,7 +191,7 @@ export function Caribbean() {
   }, []);
 
   return (
-    <div id="projects" ref={containerRef} className="relative w-full overflow-hidden bg-black">
+    <div ref={containerRef} className="relative w-full overflow-hidden bg-black">
       
       {/* ScrollTrigger Container */}
       <div
@@ -315,8 +317,23 @@ export function Caribbean() {
                       {retreat.description}
                     </p>
 
-                    {/* 5. Bottom Accent Divider (Long Line Close with Faded Ends & Hollow Diamond) */}
-                    <div className="flex items-center justify-center gap-4 w-[50vw] max-w-xl mt-8 z-10 pointer-events-none">
+                    {/* 5. Explore All Projects CTA (Small & Positioned before divider) */}
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: 0.3, duration: 0.8 }}
+                      className="mt-6 z-40"
+                    >
+                      <Link 
+                        href={`/projects/${retreat.id}`}
+                        className="link-flash font-sans text-[8px] md:text-[9px] text-[#d1a26c] uppercase tracking-[0.4em] cursor-pointer pointer-events-auto"
+                      >
+                        Discover the Details
+                      </Link>
+                    </motion.div>
+
+                    {/* 6. Bottom Accent Divider (Long Line Close with Faded Ends & Hollow Diamond) */}
+                    <div className="flex items-center justify-center gap-4 w-[50vw] max-w-xl mt-6 z-10 pointer-events-none">
                       <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-[#A5D6A7]/25" />
                       <div className="w-2.5 h-2.5 border border-[#A5D6A7]/45 rotate-45 bg-transparent" />
                       <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-[#A5D6A7]/25" />
