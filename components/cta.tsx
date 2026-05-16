@@ -20,10 +20,10 @@ export function CTA() {
     if (typeof window !== 'undefined' && window.Calendly) {
       // @ts-ignore
       window.Calendly.initPopupWidget({
-        url: 'https://calendly.com/shravangupta/15min?hide_landing_page_details=1&background_color=111312&text_color=ffffff&primary_color=baa184'
+        url: 'https://calendly.com/dev-shrameco/30min?hide_landing_page_details=1&background_color=0b1b12&text_color=ffffff&primary_color=d1a26c'
       });
     } else {
-      window.open('https://calendly.com/shravangupta/15min', '_blank');
+      window.open('https://calendly.com/dev-shrameco/30min', '_blank');
     }
   };
 
