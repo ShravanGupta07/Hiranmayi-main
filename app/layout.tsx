@@ -2,6 +2,14 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import { Instrument_Serif } from 'next/font/google';
+
+const instrumentalSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  variable: '--font-instrumental',
+});
 
 const ppRadioGrotesk = localFont({
   src: '../public/fonts/radio-grotesk-font/RadioGrotesk-FreeForPersonalUse/RadioGrotesk-Regular.otf',
@@ -37,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-background" data-scroll-behavior="smooth">
-      <body className={`${ppRadioGrotesk.variable} ${ppPangaia.variable} font-sans antialiased`}>
+      <body className={`${ppRadioGrotesk.variable} ${ppPangaia.variable} ${instrumentalSerif.variable} font-sans antialiased`}>
         <SmoothScroll>
           {children}
         </SmoothScroll>

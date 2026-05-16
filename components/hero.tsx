@@ -15,10 +15,18 @@ export function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isBypass, setIsBypass] = useState(false);
+  const [scrollIndex, setScrollIndex] = useState(0);
   
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const frameRef = useRef({ index: 1 });
   const renderRequested = useRef(false);
+
+  // Text content for the scroll sequence
+  const scrollTexts = [
+    "Invest In Elegance",
+    "Designed For The Elite",
+    "Homes That Define You"
+  ];
 
   useEffect(() => {
     let loadedCount = 0;
@@ -27,14 +35,13 @@ export function Hero() {
     let lastDrawnImage: HTMLImageElement | null = null;
 
     const renderFrame = () => {
+      // ... (existing renderFrame code)
       const canvas = canvasRef.current;
       const context = canvas?.getContext('2d');
       const currentIndex = Math.floor(frameRef.current.index);
       
       let img = loadedImages[currentIndex];
       
-      // Progressive fallback: if current frame is not loaded yet,
-      // find and render the nearest loaded frame for zero-latency scrolling.
       if (!img || !img.complete) {
         for (let offset = 1; offset <= TOTAL_FRAMES; offset++) {
           const prev = currentIndex - offset;
@@ -51,7 +58,6 @@ export function Hero() {
       }
 
       if (canvas && context && img && img.complete) {
-        // Skip drawing if the image is exactly the same as last rendered frame
         if (lastDrawnImage === img && canvas.width > 0) {
           renderRequested.current = false;
           return;
@@ -115,7 +121,15 @@ export function Hero() {
           scrub: true,
           pin: true,
           anticipatePin: 1,
-          onUpdate: () => requestRender(),
+          onUpdate: (self) => {
+            requestRender();
+            // Update text index with 'dead zones' for cinematic disappearances
+            const progress = self.progress;
+            if (progress > 0.05 && progress < 0.28) setScrollIndex(0);
+            else if (progress > 0.38 && progress < 0.61) setScrollIndex(1);
+            else if (progress > 0.71 && progress < 0.94) setScrollIndex(2);
+            else setScrollIndex(-1);
+          },
         },
       });
     };
@@ -317,11 +331,59 @@ export function Hero() {
             style={{ opacity: isLoaded ? 1 : 0, transition: 'opacity 0.8s ease' }}
           />
 
-        {/* Subtle Vignette */}
-        <div className="pointer-events-none absolute inset-0 z-[15] bg-gradient-to-b from-white/10 via-transparent to-white/10" />
-      </div>
+          {/* Dynamic Scrolling Text Sequence */}
+          <div className="absolute inset-0 z-[20] flex items-center justify-center pointer-events-none px-6">
+            <AnimatePresence mode="wait">
+              {isLoaded && scrollIndex !== -1 && (
+                <motion.div
+                  key={scrollIndex}
+                  initial={{ 
+                    opacity: 0, 
+                    y: 30, 
+                    filter: 'blur(10px)',
+                    x: scrollIndex === 1 ? -20 : 0 
+                  }}
+                  animate={{ 
+                    opacity: 1, 
+                    y: 0, 
+                    filter: 'blur(0px)',
+                    x: 0
+                  }}
+                  exit={{ 
+                    opacity: 0, 
+                    y: -30, 
+                    filter: 'blur(10px)',
+                    x: scrollIndex === 1 ? -20 : 0
+                  }}
+                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  className={`w-full max-w-[1600px] mx-auto flex flex-col ${
+                    scrollIndex === 1 ? 'items-start text-left pl-6 md:pl-12 lg:pl-24' : 'items-center text-center'
+                  }`}
+                >
+                  <h1 className={`font-instrument ${
+                    scrollIndex === 1 
+                      ? 'text-4xl md:text-5xl lg:text-[4rem] max-w-[400px]' 
+                      : 'text-4xl md:text-6xl lg:text-[6rem] max-w-5xl'
+                  } text-[#EAE5D9] uppercase tracking-[0.2em] leading-[0.95] drop-shadow-2xl`}>
+                    {scrollTexts[scrollIndex]}
+                  </h1>
+                  
+                  <motion.div 
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.4, duration: 1 }}
+                    className="w-24 h-[1px] bg-[#D1A26C] mt-10 opacity-60"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-    </div>
+          {/* Subtle Vignette */}
+          <div className="pointer-events-none absolute inset-0 z-[15] bg-gradient-to-b from-[#0B1B12]/40 via-transparent to-[#0B1B12]/40" />
+        </div>
+
+      </div>
     </>
   );
 }

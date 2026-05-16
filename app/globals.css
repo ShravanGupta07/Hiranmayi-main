@@ -98,6 +98,7 @@
   --font-proxima: var(--font-space-grotesk), sans-serif;
   --font-lato: var(--font-space-grotesk), sans-serif;
   --font-avenir: var(--font-space-grotesk), sans-serif;
+  --font-instrument: var(--font-instrumental);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

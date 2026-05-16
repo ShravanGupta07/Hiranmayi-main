@@ -137,7 +137,7 @@ export function Header() {
                   <span className={`h-[1.5px] w-6 ${hamburgerBg} group-hover:bg-[#d1a26c] transition-all duration-300 group-hover:translate-x-1`} />
                   <span className={`h-[1.5px] w-4 ${hamburgerBg} group-hover:bg-[#d1a26c] transition-all duration-300 group-hover:w-6`} />
                 </div>
-                <span className="hidden sm:inline text-xs tracking-[0.25em] uppercase font-serif">
+                <span className="hidden sm:inline text-xs tracking-[0.25em] uppercase font-instrument">
                   MENU
                 </span>
               </button>
@@ -145,7 +145,7 @@ export function Header() {
               <a 
                 href="#featured-projects"
                 onClick={(e) => handleSmoothScroll(e, '#featured-projects')}
-                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${subTextColor} hover:text-[#d1a26c] transition-colors font-serif`}
+                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${subTextColor} hover:text-[#d1a26c] transition-colors font-instrument`}
               >
                 PROJECTS
               </a>
@@ -156,7 +156,7 @@ export function Header() {
               <a 
                 href="#contact"
                 onClick={(e) => handleSmoothScroll(e, '#contact')}
-                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${textColor} hover:text-[#d1a26c] transition-colors font-serif`}
+                className={`hidden sm:inline-block text-xs tracking-[0.25em] uppercase ${textColor} hover:text-[#d1a26c] transition-colors font-instrument`}
               >
                 CONTACT US
               </a>
@@ -210,7 +210,7 @@ export function Header() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </div>
-                  <span className="text-[10px] tracking-[0.25em] uppercase font-serif">CLOSE</span>
+                  <span className="text-[10px] tracking-[0.25em] uppercase font-instrument">CLOSE</span>
                 </button>
               </div>
 
@@ -226,14 +226,14 @@ export function Header() {
                     onMouseEnter={() => setHoveredIndex(index)}
                   >
                     {/* Golden Index Number */}
-                    <span className="font-serif text-xs md:text-sm font-medium tracking-[0.2em] text-[#d1a26c]/50 group-hover:text-[#d1a26c] transition-colors">
+                    <span className="font-instrument text-xs md:text-sm font-medium tracking-[0.2em] text-[#d1a26c]/50 group-hover:text-[#d1a26c] transition-colors">
                       {item.number}
                     </span>
 
                     <a
                       href={item.href}
                       onClick={(e) => handleSmoothScroll(e, item.href)}
-                      className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-[#EAE5D9] hover:text-[#d1a26c] transition-all duration-300 transform group-hover:translate-x-3"
+                      className="font-instrument text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-[#EAE5D9] hover:text-[#d1a26c] transition-all duration-300 transform group-hover:translate-x-3"
                     >
                       {item.label}
                     </a>
@@ -270,10 +270,10 @@ export function Header() {
                   
                   {/* Aesthetic Text Overlay on Image Side */}
                   <div className="absolute bottom-14 left-12 right-12 z-10 flex flex-col gap-2">
-                    <span className="text-[10px] font-semibold tracking-[0.3em] text-[#d1a26c] uppercase font-serif">
+                    <span className="text-[10px] font-semibold tracking-[0.3em] text-[#d1a26c] uppercase font-instrument">
                       {navItems[hoveredIndex].subtitle}
                     </span>
-                    <span className="font-serif text-2xl font-light leading-relaxed text-[#EAE5D9] max-w-sm">
+                    <span className="font-instrument text-2xl font-light leading-relaxed text-[#EAE5D9] max-w-sm">
                       {navItems[hoveredIndex].quote}
                     </span>
                   </div>
